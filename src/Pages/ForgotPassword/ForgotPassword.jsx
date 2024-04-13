@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Copyright(props) {
@@ -51,6 +52,9 @@ const defaultTheme = createTheme({
 });
 
 export default function ForgotPassword() {
+  //  Submit button
+  const [loading, setLoading] = React.useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -97,14 +101,17 @@ export default function ForgotPassword() {
                 />
               </Grid>
             </Grid>
-            <Button
+
+            <LoadingButton
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              disableRipple
+              loading={loading}
+              sx={{ mt: 3, mb: 2, transition: "0.1s" }}
             >
               Continue
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

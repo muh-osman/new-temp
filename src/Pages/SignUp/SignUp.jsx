@@ -98,7 +98,7 @@ export default function SignUp() {
     try {
       const res = await api.post(`api/register`, data);
       // console.log(res.data);
-      setCookie("token", res.data.currentToken);
+      setCookie("token", res.data.token);
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setLoading(false);
