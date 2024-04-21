@@ -6,14 +6,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
-// use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
-// Protected route
+// Group for protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Return the authenticated user and his token
-    // http://localhost:8000/api/user
+    // Return the authenticated user and his token (http://localhost:8000/api/user)
     Route::get('user', function (Request $request) {
         return [
             'user' => $request->user(),
@@ -21,19 +19,37 @@ Route::middleware('auth:sanctum')->group(function () {
         ];
     });
 
-    // Logout Route
-    // http://localhost:8000/api/logout
+    // Logout Route (http://localhost:8000/api/logout)
     Route::post('/logout', [UserController::class, 'logout']);
+
+
+    // Resend verification email (http://localhost:8000/api/resend-verify-email)
+    Route::post('/resend-verify-email', [UserController::class, 'resendVerifyEmail']);
 });
 
 
-// Register Route:
-// http://localhost:8000/api/register
-Route::post('/register', [UserController::class, 'register']);
+// Group for guest routes
+Route::middleware('guest')->group(function () {
+    // Register Route (http://localhost:8000/api/register)
+    Route::post('/register', [UserController::class, 'register']);
 
-// Login Route
-// http://localhost:8000/api/login
-Route::post('/login', [UserController::class, 'login']);
+    // Login Route (http://localhost:8000/api/login)
+    Route::post('/login', [UserController::class, 'login']);
+
+    // Email verification endpoint (http://localhost:8000/api/verify-email)
+    Route::post('/verify-email', [UserController::class, 'verifyEmail'])->name('verification.verify');
+
+    // Password Reset Route (http://localhost:8000/api/forgot-password)
+    Route::post('/forgot-password', [UserController::class, 'forgotPassword'])->name('password.email');
+
+    // API route for resetting the password (http://localhost:8000/api/reset-password)
+    Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('password.reset');
+});
+
+
+
+
+
 
 
 // Show all posts:      method GET    =>  http://localhost:8000/api/posts

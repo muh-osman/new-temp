@@ -12,13 +12,16 @@ import Blog from "./Pages/Blog/Blog";
 import About from "./Pages/About/About";
 import LogIn from "./Pages/LogIn/LogIn";
 import SignUp from "./Pages/SignUp/SignUp";
+import VerifyEmail from "./Pages/VerifyEmail/VerifyEmail";
 import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 import Auth from "./Utils/Auth";
 import NotAuth from "./Utils/NotAuth";
 import DashboardLayout from "./Layout/DashboardLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Add from "./Pages/Dashboard/Add/Add";
 import Edit from "./Pages/Dashboard/Edit/Edit";
+import NotFound from "./Pages/NotFound/NotFound";
 
 
 export default function App() {
@@ -37,6 +40,7 @@ export default function App() {
           <Route path="login" element={<LogIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
         {/* End Check if login */}
         </Route>
 
@@ -49,6 +53,10 @@ export default function App() {
           </Route>
         {/* End protected route */}
         </Route>
+
+        {/* http://localhost:3000/verify-email?expires=XXX&hash=XXX&id=XXX&signature=XXX */}
+        <Route path="verify-email" element={<VerifyEmail />} />
+        <Route path="*" element={<NotFound />} />
 
       </Route>
     )

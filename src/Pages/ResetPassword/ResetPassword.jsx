@@ -1,5 +1,5 @@
 // React router
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 // Mui
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
@@ -9,15 +9,14 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import PasswordIcon from "@mui/icons-material/Password";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 // API
 import api from "../../Utils/Api";
-// Cookies
-import { useCookies } from "react-cookie";
 // Toastify
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -58,44 +57,70 @@ const defaultTheme = createTheme({
   // ... other theme options
 });
 
-export default function SignUp() {
+export default function ForgotPassword() {
+  const [inputs, setInputs] = React.useState({
+    password: "",
+    passwordConfirmation: "",
+  });
+
+  const handleChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
   //  Submit button
   const [loading, setLoading] = React.useState(false);
   //
-  const navigate = useNavigate(); //After Signup
-  // Cookies
-  const [cookies, setCookie] = useCookies(["token", "verified"]);
+  const [disable, setDisable] = React.useState(false);
+  //
+  const navigate = useNavigate(); //After Submit
+  //
   const formRef = React.useRef();
+
+  // Parse the query parameters from the URL
+  //   http://localhost:3000/reset-password?token=...&email=...
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // required input
     const validate = formRef.current.reportValidity();
     if (!validate) return;
+    //
+    if (inputs.password !== inputs.passwordConfirmation) {
+      toast.error("Passwords do not match.");
+      return false;
+    }
 
-    // Button animation & Disable input
+    // Button animation on
     setLoading(true);
+    // Disable input & submit button
+    setDisable(true);
 
     const data = new FormData(event.currentTarget);
 
-    // console.log({
-    //   email: data.get("email"),
-    //   password: data.get("password"),
-    // });
-
     try {
-      const res = await api.post(`api/register`, data);
-      // console.log(res.data);
-      setCookie("verified", res.data.user.email_verified_at);
-      setCookie("token", res.data.token);
-      // console.log(res.data.user.email_verified_at);
-      navigate("/dashboard", { replace: true });
+      const res = await api.post(`api/reset-password`, {
+        token: token,
+        email: email,
+        password: inputs.password,
+        password_confirmation: inputs.passwordConfirmation,
+      });
+      // console.log(res);
+      toast.success("Your password has been reset.");
+      setLoading(false);
+
+      // Navigate the user to the login page after a delay
+      setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 6000); // 3 seconds delay
     } catch (err) {
       console.error(err);
       setLoading(false);
+      setDisable(false);
       const errorMessage =
         err?.response?.data?.message || err?.message || "An error occurred";
-      // Toastify
       toast.error(errorMessage);
     }
   };
@@ -106,10 +131,10 @@ export default function SignUp() {
         component="main"
         maxWidth="xs"
         sx={{
-          height: "100vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          height: "100vh",
           justifyContent: "center",
         }}
       >
@@ -129,7 +154,7 @@ export default function SignUp() {
         />
         {/* End Toastify */}
         <CssBaseline />
-        <Box>
+        <Box sx={{ width: "100%" }}>
           <Avatar
             sx={{
               margin: "auto",
@@ -137,41 +162,46 @@ export default function SignUp() {
               bgcolor: "secondary.main",
             }}
           >
-            <ExitToAppIcon />
+            <PasswordIcon />
           </Avatar>
           <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
-            Sign up
+            Reset Password
           </Typography>
           <Box
             ref={formRef}
             component="form"
             noValidate
             onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
+            sx={{ mt: 3, width: "100%" }}
           >
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
                   required
-                  disabled={loading} // Disable the input field if the form has been submitted
+                  fullWidth
+                  id="password"
+                  label="New password"
+                  type="password"
+                  name="password"
+                  autoComplete="new-password"
+                  autoFocus
+                  value={inputs.password}
+                  onChange={handleChange}
+                  disabled={disable} // Disable the input field if the form has been submitted
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
                   required
-                  disabled={loading} // Disable the input field if the form has been submitted
+                  fullWidth
+                  id="confirm-password"
+                  label="Confirm new password"
+                  type="password"
+                  name="passwordConfirmation"
+                  autoComplete="password"
+                  value={inputs.passwordConfirmation}
+                  onChange={handleChange}
+                  disabled={disable} // Disable the input field if the form has been submitted
                 />
               </Grid>
             </Grid>
@@ -182,18 +212,11 @@ export default function SignUp() {
               variant="contained"
               disableRipple
               loading={loading}
+              disabled={disable} // Disable submit button if the form has been submitted
               sx={{ mt: 3, mb: 2, transition: "0.1s" }}
             >
-              Sign Up
+              Reset Password
             </LoadingButton>
-
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link component={RouterLink} to="/login" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

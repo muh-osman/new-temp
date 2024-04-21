@@ -6,12 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
+// React cookie
+import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <CookiesProvider>
     <App />
-  </React.StrictMode>
+  </CookiesProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -57,7 +57,7 @@ const pages = [
 
 function DrawerAppBar(props) {
   // Cookie
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "verified"]);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -109,6 +109,7 @@ function DrawerAppBar(props) {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
+
         <CssBaseline />
 
         <AppBar component="nav">

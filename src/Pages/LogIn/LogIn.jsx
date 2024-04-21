@@ -63,22 +63,10 @@ const defaultTheme = createTheme({
 export default function LogIn() {
   //  Submit button
   const [loading, setLoading] = React.useState(false);
+  //
   const navigate = useNavigate(); //After Signin
-  // Toastify
-  const notify = (msg) =>
-    toast.error(msg, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
   // Cookies
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "verified"]);
   const formRef = React.useRef();
 
   const handleSubmit = async (event) => {
@@ -87,7 +75,7 @@ export default function LogIn() {
     const validate = formRef.current.reportValidity();
     if (!validate) return;
 
-    // Button animation
+    // Button animation & Disable input
     setLoading(true);
 
     const data = new FormData(event.currentTarget);
@@ -99,13 +87,17 @@ export default function LogIn() {
 
     try {
       const res = await api.post(`api/login`, data);
-      // console.log(res.data.token);
+      // console.log(res.data);
+      setCookie("verified", res.data.user.email_verified_at);
       setCookie("token", res.data.token);
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      setLoading(false);
       console.error(err);
-      notify(err.response.data.message);
+      setLoading(false);
+      const errorMessage =
+        err?.response?.data?.message || err?.message || "An error occurred";
+      // Toastify
+      toast.error(errorMessage);
     }
   };
 
@@ -178,6 +170,7 @@ export default function LogIn() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                disabled={loading} // Disable the input field if the form has been submitted
               />
               <TextField
                 margin="normal"
@@ -188,10 +181,12 @@ export default function LogIn() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                disabled={loading} // Disable the input field if the form has been submitted
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
+                disabled={loading} // Disable the input field if the form has been submitted
               />
 
               <LoadingButton

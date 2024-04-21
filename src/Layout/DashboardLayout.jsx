@@ -26,14 +26,16 @@ import StyleIcon from "@mui/icons-material/Style";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-// React
-import { useState, useEffect } from "react";
 // React router
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 // API
 import api from "../Utils/Api";
 // Cookies
 import { useCookies } from "react-cookie";
+// Toastify
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CustomToast from "../Components/CustomToast ";
 
 const drawerWidth = 240;
 
@@ -41,7 +43,8 @@ function ResponsiveDrawer(props) {
   //  Logout button
   const [loading, setLoading] = React.useState(false);
   // Cookie
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["token", "verified"]);
+
   //
   const nav = useNavigate();
   //   const [data, setData] = useState([]);
@@ -95,7 +98,6 @@ function ResponsiveDrawer(props) {
       <Toolbar style={{ justifyContent: "center" }}>
         <Link
           to="/"
-          target="_blank"
           style={{ textDecoration: "none", color: "#fff" }}
         >
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
@@ -164,18 +166,47 @@ function ResponsiveDrawer(props) {
         { headers: { Authorization: `Bearer ${cookies.token}` } }
       );
       // Remove the token cookie
+      removeCookie("verified");
       removeCookie("token");
       // Redirect to the login page
       // nav("/login", { replace: true });
     } catch (err) {
       console.error(err);
       // Remove the token cookie
+      removeCookie("verified");
       removeCookie("token");
     }
   };
 
+  // Toastify
+  const notify = () => toast.warn(<CustomToast />);
+  //
+  React.useEffect(() => {
+    if (cookies.token && !cookies.verified) {
+      const verifyNotification = setTimeout(notify, 5000);
+
+      return () => clearTimeout(verifyNotification);
+    }
+  }, [cookies.token, cookies.verified]);
+
   return (
     <Box sx={{ display: "flex" }} dir="ltr">
+      {/* Start Toastify */}
+      <ToastContainer
+        position="top-center"
+        newestOnTop={false}
+        autoClose={5000}
+        hideProgressBar
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+      />
+      {/* End Toastify */}
+
       <CssBaseline />
       <AppBar
         position="fixed"
