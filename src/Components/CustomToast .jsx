@@ -1,26 +1,8 @@
 // API
-import api from "../Utils/Api";
-// Cookies
-import { useCookies } from "react-cookie";
+import { useResendEmailApi } from "../API/useResendEmailApi";
 
 const CustomToast = ({ closeToast }) => {
-  // Cookie
-  const [cookies, setCookie] = useCookies(["token"]);
-
-  const resendEmail = async () => {
-    try {
-      const res = await api.post(
-        `api/resend-verify-email`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${cookies.token}` },
-        }
-      );
-      // console.log(res);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const { mutate } = useResendEmailApi();
 
   return (
     <>
@@ -38,19 +20,18 @@ const CustomToast = ({ closeToast }) => {
           `}
       </style>
 
-      <div style={{ cursor: "auto" }}>
-        Please verify your email, or
+      <div>
+        Please&nbsp;
         <button
           className="resendButton"
           onClick={() => {
-            // Resend email logic here
-            resendEmail();
-            closeToast(); // Close the toast notification
+            mutate();
+            closeToast();
           }}
         >
-          resend
-        </button>{" "}
-        verification email.
+          request
+        </button>
+        &nbsp;a verification email to confirm your account.
       </div>
     </>
   );

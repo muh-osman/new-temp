@@ -13,7 +13,6 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 
 import Avatar from "@mui/material/Avatar";
@@ -26,16 +25,6 @@ import { Link, Outlet } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 const drawerWidth = 240;
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#7431fa", // Your desired shade of red
-    },
-    // ... other colors
-  },
-  // ... other theme options
-});
 
 const pages = [
   {
@@ -107,19 +96,54 @@ function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
 
-        <CssBaseline />
+      <AppBar component="nav">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {/* Logo in large screen */}
+            <Toolbar
+              sx={{ display: { xs: "none", md: "flex" } }}
+              style={{ justifyContent: "center", paddingLeft: 0 }}
+            >
+              <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ alignItems: "center" }}
+                >
+                  <Avatar
+                    alt="Logo"
+                    src={logo}
+                    sx={{
+                      width: 50,
+                      height: 50,
+                      textAlign: "center",
+                      borderRadius: 0,
+                    }}
+                  />
+                </Stack>
+              </Link>
+            </Toolbar>
 
-        <AppBar component="nav">
-          <Container maxWidth="xl">
-            <Toolbar disableGutters>
-              {/* Logo in large screen */}
-              <Toolbar
-                sx={{ display: { xs: "none", md: "flex" } }}
-                style={{ justifyContent: "center", paddingLeft: 0 }}
+            {/* Pages in small screen */}
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleDrawerToggle}
+                color="inherit"
               >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+
+            {/* Logo in small screen */}
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <Toolbar style={{ justifyContent: "center" }}>
                 <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
                   <Stack
                     direction="row"
@@ -139,123 +163,77 @@ function DrawerAppBar(props) {
                   </Stack>
                 </Link>
               </Toolbar>
+            </Box>
 
-              {/* Pages in small screen */}
-              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleDrawerToggle}
-                  color="inherit"
+            {/* Pages in large screen */}
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <List sx={{ display: "flex" }}>
+                {pages.map(({ id, title, path }) => (
+                  <ListItem key={id} to={path} component={Link} disablePadding>
+                    <ListItemButton
+                      sx={{ textAlign: "center", color: "white" }}
+                    >
+                      <ListItemText primary={title} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+
+            {/* Login button */}
+            <Box sx={{ flexGrow: 0 }}>
+              <div className="nav_link" style={{ marginLeft: "auto" }}>
+                <Button
+                  component={Link}
+                  to={cookies.token ? "dashboard" : "login"}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#fbfbfb",
+                    color: "#7431fa",
+                    border: "1px solid transparent",
+                    "&:hover": {
+                      backgroundColor: "#7431fa",
+                      color: "#fbfbfb",
+                      border: "1px solid #fbfbfb",
+                    },
+                  }}
                 >
-                  <MenuIcon />
-                </IconButton>
-              </Box>
+                  {cookies.token ? "Dashboard" : "Login"}
+                </Button>
+              </div>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-              {/* Logo in small screen */}
-              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-                <Toolbar style={{ justifyContent: "center" }}>
-                  <Link
-                    to="/"
-                    style={{ textDecoration: "none", color: "#fff" }}
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      sx={{ alignItems: "center" }}
-                    >
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={logo}
-                        sx={{
-                          width: 50,
-                          height: 50,
-                          textAlign: "center",
-                          borderRadius: 0,
-                        }}
-                      />
-                    </Stack>
-                  </Link>
-                </Toolbar>
-              </Box>
+      {/* Pages in small screen */}
+      <nav>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </nav>
 
-              {/* Pages in large screen */}
-              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                <List sx={{ display: "flex" }}>
-                  {pages.map(({ id, title, path }) => (
-                    <ListItem
-                      key={id}
-                      to={path}
-                      component={Link}
-                      disablePadding
-                    >
-                      <ListItemButton
-                        sx={{ textAlign: "center", color: "white" }}
-                      >
-                        <ListItemText primary={title} />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-
-              {/* Login button */}
-              <Box sx={{ flexGrow: 0 }}>
-                <div className="nav_link" style={{ marginLeft: "auto" }}>
-                  <Button
-                    component={Link}
-                    to={cookies.token ? "dashboard" : "login"}
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#fbfbfb",
-                      color: "#7431fa",
-                      border: "1px solid transparent",
-                      "&:hover": {
-                        backgroundColor: "#7431fa",
-                        color: "#fbfbfb",
-                        border: "1px solid #fbfbfb",
-                      },
-                    }}
-                  >
-                    {cookies.token ? "Dashboard" : "Login"}
-                  </Button>
-                </div>
-              </Box>
-            </Toolbar>
-          </Container>
-        </AppBar>
-
-        {/* Pages in small screen */}
-        <nav>
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: "block", md: "none" },
-              "& .MuiDrawer-paper": {
-                boxSizing: "border-box",
-                width: drawerWidth,
-              },
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </nav>
-
-        {/* Outlet */}
-        <Box component="main" sx={{ p: 3 }}>
-          <Toolbar />
-          <Outlet />
-        </Box>
+      {/* Outlet */}
+      <Box component="main" sx={{ p: 3 }}>
+        <Toolbar />
+        <Outlet />
       </Box>
-    </ThemeProvider>
+    </Box>
   );
 }
 

@@ -18,50 +18,27 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 // Image logo
 import logo from "../Assets/Images/logo.png";
 // MUI icons
-import StyleIcon from "@mui/icons-material/Style";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 // React router
-import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-// API
-import api from "../Utils/Api";
+import { Link, useLocation, Outlet } from "react-router-dom";
 // Cookies
 import { useCookies } from "react-cookie";
+// API
+import { useLogoutApi } from "../API/useLogoutApi";
 // Toastify
-import { ToastContainer, toast, Slide } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import CustomToast from "../Components/CustomToast ";
 
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
-  //  Logout button
-  const [loading, setLoading] = React.useState(false);
   // Cookie
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "verified"]);
-
-  //
-  const nav = useNavigate();
-  //   const [data, setData] = useState([]);
-
-  //   async function fetchData() {
-  //     try {
-  //       const res = await api.get("api/cards");
-  //       setData(res.data);
-  //       // console.log(res.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     fetchData();
-  //   }, []);
+  const [cookies, setCookie] = useCookies(["token", "verified"]);
 
   const pages = [
     {
@@ -96,13 +73,10 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div>
       <Toolbar style={{ justifyContent: "center" }}>
-        <Link
-          to="/"
-          style={{ textDecoration: "none", color: "#fff" }}
-        >
+        <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
           <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             <Avatar
-              alt="Remy Sharp"
+              alt="Logo"
               src={logo}
               sx={{
                 width: 50,
@@ -155,32 +129,8 @@ function ResponsiveDrawer(props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  const logout = async () => {
-    // Button animation
-    setLoading(true);
-
-    try {
-      await api.post(
-        `api/logout`,
-        {},
-        { headers: { Authorization: `Bearer ${cookies.token}` } }
-      );
-      // Remove the token cookie
-      removeCookie("verified");
-      removeCookie("token");
-      // Redirect to the login page
-      // nav("/login", { replace: true });
-    } catch (err) {
-      console.error(err);
-      // Remove the token cookie
-      removeCookie("verified");
-      removeCookie("token");
-    }
-  };
-
-  // Toastify
+  // Check verification
   const notify = () => toast.warn(<CustomToast />);
-  //
   React.useEffect(() => {
     if (cookies.token && !cookies.verified) {
       const verifyNotification = setTimeout(notify, 5000);
@@ -189,24 +139,14 @@ function ResponsiveDrawer(props) {
     }
   }, [cookies.token, cookies.verified]);
 
+  // Logout
+  const { mutate, isPending } = useLogoutApi();
+  const logout = () => {
+    mutate();
+  };
+
   return (
     <Box sx={{ display: "flex" }} dir="ltr">
-      {/* Start Toastify */}
-      <ToastContainer
-        position="top-center"
-        newestOnTop={false}
-        autoClose={5000}
-        hideProgressBar
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Slide}
-      />
-      {/* End Toastify */}
-
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -232,7 +172,7 @@ function ResponsiveDrawer(props) {
               onClick={logout}
               variant="contained"
               disableRipple
-              loading={loading}
+              loading={isPending}
               loadingIndicator={
                 <CircularProgress sx={{ color: "#fbfbfb" }} size={24} />
               } // Customize the loader color here

@@ -40,21 +40,21 @@ class UserController extends Controller
                 'email_sha1_hash' => sha1($validatedData['email']), // Store the SHA1 hash
             ]);
 
-            // Generate the email verification URL
-            $verificationUrl = URL::temporarySignedRoute(
-                'verification.verify',
-                now()->addMinutes(60),
-                ['id' => $user->id, 'hash' => $user->email_sha1_hash]
-            );
+            // // Generate the email verification URL
+            // $verificationUrl = URL::temporarySignedRoute(
+            //     'verification.verify',
+            //     now()->addMinutes(60),
+            //     ['id' => $user->id, 'hash' => $user->email_sha1_hash]
+            // );
 
-            // Extract the query parameters from the verification URL
-            parse_str(parse_url($verificationUrl, PHP_URL_QUERY), $queryParams);
+            // // Extract the query parameters from the verification URL
+            // parse_str(parse_url($verificationUrl, PHP_URL_QUERY), $queryParams);
 
-            // Append the query parameters to the frontend URL
-            $verificationUrlWithParams = $this->frontendUrl . '/verify-email' . '?' . http_build_query($queryParams);
+            // // Append the query parameters to the frontend URL
+            // $verificationUrlWithParams = $this->frontendUrl . '/verify-email' . '?' . http_build_query($queryParams);
 
-            // Send the verification URL to the frontend
-            Mail::to($user->email)->send(new VerifyEmail($verificationUrlWithParams));
+            // // Send the verification URL to the frontend
+            // Mail::to($user->email)->send(new VerifyEmail($verificationUrlWithParams));
 
             // Automatically log in the user after registration
             Auth::login($user);

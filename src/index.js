@@ -6,15 +6,40 @@ import reportWebVitals from "./reportWebVitals";
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
+// MUI theme
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+// Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // React cookie
-import { CookiesProvider } from 'react-cookie';
+import { CookiesProvider } from "react-cookie";
+// React query
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Create a client
+const qc = new QueryClient();
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#7431fa", // Your desired shade of red
+    },
+    // ... other colors
+  },
+  // ... other theme options
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <CookiesProvider>
-    <App />
-  </CookiesProvider>
+  <ThemeProvider theme={defaultTheme}>
+    <CookiesProvider>
+      <QueryClientProvider client={qc}>
+        <ToastContainer />
+        <App />
+      </QueryClientProvider>
+    </CookiesProvider>
+  </ThemeProvider>
   // </React.StrictMode>
 );
 
