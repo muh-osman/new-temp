@@ -22,7 +22,7 @@ const qc = new QueryClient();
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#7431fa", // Your desired shade of red
+      main: "#7431fa",
     },
     // ... other colors
   },
