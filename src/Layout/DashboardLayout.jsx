@@ -2,7 +2,6 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +23,7 @@ import logo from "../Assets/Images/logo.png";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from '@mui/icons-material/Delete';
 // React router
 import { Link, useLocation, Outlet } from "react-router-dom";
 // Cookies
@@ -58,6 +58,12 @@ function ResponsiveDrawer(props) {
       title: "Edit",
       path: "/dashboard/edit",
       icon: <AutoFixHighIcon sx={{ color: "#757575" }} />,
+    },
+    {
+      id: 4,
+      title: "Delete",
+      path: "/dashboard/delete",
+      icon: <DeleteIcon sx={{ color: "#757575" }} />,
     },
   ];
 
@@ -147,13 +153,11 @@ function ResponsiveDrawer(props) {
 
   return (
     <Box sx={{ display: "flex" }} dir="ltr">
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "#7431fa",
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -238,6 +242,7 @@ function ResponsiveDrawer(props) {
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           backgroundColor: "#fbfbfb",
+          position: "relative",
         }}
       >
         <Toolbar />

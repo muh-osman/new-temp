@@ -4,10 +4,11 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 // Bootstrap
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/js/bootstrap.min.js";
 // MUI theme
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ScopedCssBaseline from "@mui/material/ScopedCssBaseline";
 // Toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,7 +18,13 @@ import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a client
-const qc = new QueryClient();
+const qc = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
 
 const defaultTheme = createTheme({
   palette: {
@@ -36,7 +43,9 @@ root.render(
     <CookiesProvider>
       <QueryClientProvider client={qc}>
         <ToastContainer />
-        <App />
+        <ScopedCssBaseline>
+          <App />
+        </ScopedCssBaseline>
       </QueryClientProvider>
     </CookiesProvider>
   </ThemeProvider>

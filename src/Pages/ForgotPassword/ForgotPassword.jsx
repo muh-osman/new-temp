@@ -1,7 +1,6 @@
 // Mui
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -41,7 +40,6 @@ export default function ForgotPassword() {
         justifyContent: "center",
       }}
     >
-      <CssBaseline />
       <Box sx={{ width: "100%" }}>
         <Avatar
           sx={{

@@ -13,6 +13,7 @@ const CustomToast = ({ closeToast }) => {
               background-color: transparent;
               color: #0d6efd;
               cursor: pointer;
+              font-size: 16px;
             }
             .resendButton:hover {
               color: #0b5ed7;

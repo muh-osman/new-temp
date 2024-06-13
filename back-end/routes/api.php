@@ -25,6 +25,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Resend verification email (http://localhost:8000/api/resend-verify-email)
     Route::post('/resend-verify-email', [UserController::class, 'resendVerifyEmail']);
+
+
+    // Show all posts:      method GET    =>  http://localhost:8000/api/posts
+    // Create post:         method POST   =>  http://localhost:8000/api/posts
+    // Show post by id:     method GET    =>  http://localhost:8000/api/posts/1
+    // Update post by id:   method POST   =>  http://localhost:8000/api/posts/1?_method=PATCH
+    // Delete post by id:   method DELETE =>  http://localhost:8000/api/posts/1
+    Route::apiResource('posts', PostController::class);
+
+
 });
 
 
@@ -45,16 +55,3 @@ Route::middleware('guest')->group(function () {
     // API route for resetting the password (http://localhost:8000/api/reset-password)
     Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('password.reset');
 });
-
-
-
-
-
-
-
-// Show all posts:      method GET    =>  http://localhost:8000/api/posts
-// Create post:         method POST   =>  http://localhost:8000/api/posts
-// Show post by id:     method GET    =>  http://localhost:8000/api/posts/1
-// Update post by id:   method POST   =>  http://localhost:8000/api/posts/1?_method=PATCH
-// Delete post by id:   method DELETE =>  http://localhost:8000/api/posts/1
-Route::apiResource('posts', PostController::class);

@@ -3,7 +3,6 @@ import { Link as RouterLink } from "react-router-dom";
 // Mui
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -43,7 +42,6 @@ export default function SignUp() {
         justifyContent: "center",
       }}
     >
-      <CssBaseline />
       <Box>
         <Avatar
           sx={{
