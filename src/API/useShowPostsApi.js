@@ -1,4 +1,3 @@
-// useProducts.js
 import { useQuery } from "@tanstack/react-query";
 // Cookies
 import { useCookies } from "react-cookie";
