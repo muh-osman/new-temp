@@ -2,7 +2,7 @@ import style from "./Post.module.scss";
 // React
 import { useEffect } from "react";
 // React router
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 // API
 import useShowPostByIdApi from "../../../API/useShowPostByIdApi";
 // Toastify
@@ -31,6 +31,8 @@ export default function Post() {
     }
   }, [error]);
 
+  const navigate = useNavigate();
+
   return (
     <div className={style.container}>
       {fetchStatus === "fetching" && (
@@ -39,7 +41,7 @@ export default function Post() {
         </div>
       )}
 
-      <Link to="/dashboard">Back</Link>
+      <button onClick={() => navigate(-1)}> Back </button>
 
       <h1>{post?.title}</h1>
       <p>{post?.description}</p>
