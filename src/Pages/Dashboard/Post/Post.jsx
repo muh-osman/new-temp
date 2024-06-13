@@ -2,13 +2,14 @@ import style from "./Post.module.scss";
 // React
 import { useEffect } from "react";
 // React router
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // API
 import useShowPostByIdApi from "../../../API/useShowPostByIdApi";
 // Toastify
 import { toast } from "react-toastify";
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
+import Button from "@mui/material/Button";
 
 export default function Post() {
   let { id } = useParams();
@@ -41,7 +42,9 @@ export default function Post() {
         </div>
       )}
 
-      <button onClick={() => navigate(-1)}> Back </button>
+      <Button onClick={() => navigate(-1)} variant="outlined">
+        Back
+      </Button>
 
       <h1>{post?.title}</h1>
       <p>{post?.description}</p>
