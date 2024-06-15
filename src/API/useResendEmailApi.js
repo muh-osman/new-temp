@@ -1,24 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 // API base
-import API from "./Api";
-// Cookies
-import { useCookies } from "react-cookie";
+import { API } from "./Api";
 // Toastify
 import { toast } from "react-toastify";
 
 export const useResendEmailApi = () => {
-  // Cookies
-  const [cookies, setCookie] = useCookies(["token"]);
-
   return useMutation({
     mutationFn: async () => {
-      const res = await API.post(
-        "api/resend-verify-email",
-        {},
-        {
-          headers: { Authorization: `Bearer ${cookies.token}` },
-        }
-      );
+      const res = await API.post("api/resend-verify-email", {});
       return res.data;
     },
 

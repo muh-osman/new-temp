@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-//
+// React router
 import { useNavigate } from "react-router-dom";
 // API base
-import API from "./Api";
+import { API } from "./Api";
 // Cookies
 import { useCookies } from "react-cookie";
 // Toastify

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 //
 import { useNavigate } from "react-router-dom";
 // API base
-import API from "./Api";
+import { API } from "./Api";
 // Toastify
 import { toast } from "react-toastify";
 
