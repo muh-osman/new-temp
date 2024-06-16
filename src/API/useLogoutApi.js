@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 // API base
-import { API } from "./Api";
+import API from "./Api";
 // Cookies
 import { useCookies } from "react-cookie";
 
@@ -10,7 +10,7 @@ export const useLogoutApi = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const res = await API.post("api/logout", {});
+      const res = await API.post("api/logout");
       return res.data;
     },
 

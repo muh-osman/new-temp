@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 // API
-import { API } from "./Api";
+import API from "./Api";
 
 export default function useShowPostByIdApi({ id }) {
   const fetchPostById = async () => {

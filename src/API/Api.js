@@ -3,7 +3,7 @@ import { Cookies } from "react-cookie";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-export const API = axios.create({
+const API = axios.create({
   baseURL: apiUrl,
 });
 
@@ -20,3 +20,5 @@ API.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export default API;

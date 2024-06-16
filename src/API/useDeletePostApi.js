@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 // API base
-import { API } from "./Api";
+import API from "./Api";
 // Toastify
 import { toast } from "react-toastify";
 // Api

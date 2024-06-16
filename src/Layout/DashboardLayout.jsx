@@ -137,13 +137,13 @@ function ResponsiveDrawer(props) {
 
   // Check verification
   const notify = () => toast.warn(<CustomToast />);
-  React.useEffect(() => {
-    if (cookies.token && !cookies.verified) {
-      const verifyNotification = setTimeout(notify, 5000);
+  // React.useEffect(() => {
+  //   if (cookies.token && !cookies.verified) {
+  //     const verifyNotification = setTimeout(notify, 5000);
 
-      return () => clearTimeout(verifyNotification);
-    }
-  }, [cookies.token, cookies.verified]);
+  //     return () => clearTimeout(verifyNotification);
+  //   }
+  // }, [cookies.token, cookies.verified]);
 
   // Logout
   const { mutate, isPending } = useLogoutApi();
